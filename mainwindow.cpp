@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 
 #include <QDir>
+#include <QStandardPaths>
 
 #include <QDebug>
 
@@ -10,7 +11,24 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    ui->plainTextEdit_Input->setPlainText(QCoreApplication::applicationDirPath());
+
+    QStringList paths;
+    paths << QCoreApplication::applicationDirPath();
+
+    for(int i=0; i<18; i++){
+        QStandardPaths::StandardLocation location = static_cast<QStandardPaths::StandardLocation>(i);
+        qDebug()<<"";
+        qDebug()<<QStandardPaths::displayName(location);
+        qDebug()<<"QStandardPaths::standardLocations:"<<QStandardPaths::standardLocations(location);
+        qDebug()<<"QStandardPaths::writableLocation:"<<QStandardPaths::writableLocation(location);
+        paths<<QStandardPaths::writableLocation(location);
+    }
+
+    QString pathStr = "";
+    for(auto path : paths){
+        pathStr = pathStr + path + "\n";
+    }
+    ui->plainTextEdit_Input->setPlainText(pathStr);
 }
 
 MainWindow::~MainWindow()
